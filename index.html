@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+
+<title>Transcrição de Voz</title>
+</head>
+<body>
+<h1>Transcrição de Voz</h1>
+<button onclick="iniciarTranscricao()">Iniciar Transcrição</button>
+<button onclick="pararTranscricao()">Parar Transcrição</button>
+<div id="resultadoTranscricao"></div>
+
+<script>
+let reconhecimentoDeVoz;
+let resultadoDiv = document.getElementById('resultadoTranscricao');
+
+function iniciarTranscricao() {
+    resultadoDiv.innerHTML = '';
+    reconhecimentoDeVoz = new webkitSpeechRecognition();
+    reconhecimentoDeVoz.lang = 'pt-BR'; 
+
+    reconhecimentoDeVoz.onresult = function(event) {
+        let resultado = event.results[event.results.length - 1][0].transcript;
+        resultadoDiv.innerHTML = '<p>Transcrição: ' + resultado + '</p>';
+        categorizarTranscricao(resultado);
+    }
+
+    reconhecimentoDeVoz.start();
+}
+
+function pararTranscricao() {
+    reconhecimentoDeVoz.stop();
+}
+
+function categorizarTranscricao(transcricao) {
+   
+    if (transcricao.toLowerCase().includes('furtad')) {
+        resultadoDiv.innerHTML += '<p>Categoria: Furto</p>';
+    } else if (transcricao.toLowerCase().includes('roubad')) {
+        resultadoDiv.innerHTML += '<p>Categoria: Roubo</p>';
+    } else if (transcricao.toLowerCase().includes('assediad')) {
+        resultadoDiv.innerHTML += '<p>Categoria: Assédio</p>';
+    } else {
+        resultadoDiv.innerHTML += '<p>Categoria: Outro</p>';
+    }
+}
+</script>
+</body>
+</html>
